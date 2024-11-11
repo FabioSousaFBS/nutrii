@@ -1,6 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
-import 'package:nutrii/core/domain/entities/meal_entity.dart';
+
+import 'package:nutrii/core/entities/meal_entity.dart';
 
 class MealPlan extends Equatable {
   
@@ -54,6 +57,30 @@ class MealPlan extends Equatable {
       meals,
     ];
   }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'activated': activated,
+      'initialDate': initialDate,
+      'finalDate': finalDate,
+      'meals': meals.map((x) => x.toMap()).toList(),
+    };
+  }
+
+  factory MealPlan.fromMap(Map<String, dynamic> map) {
+    return MealPlan(
+      id: map['id'] as int,
+      activated: map['activated'] as bool,
+      initialDate: map['initialDate'] as String,
+      finalDate: map['finalDate'] as String,
+      meals: List<Meal>.from((map['meals'] as List<int>).map<Meal>((x) => Meal.fromMap(x as Map<String,dynamic>),),),
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory MealPlan.fromJson(String source) => MealPlan.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
 
